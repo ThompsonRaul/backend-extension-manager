@@ -1,0 +1,47 @@
+{
+  "name": "backend-extension-manager",
+  "version": "1.0.0",
+  "description": "Backend para a gestão dos projetos e ações extensionistas dos estudantes.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm run services:up && next dev",
+    "lint:check": "prettier --check .",
+    "lint:fix": "prettier --write .",
+    "services:up": "docker-compose -f infra/compose.yaml up -d",
+    "services:stop": "docker-compose -f infra/compose.yaml stop",
+    "services:down": "docker-compose -f infra/compose.yaml down",
+    "test": "jest --runInBand --verbose",
+    "test:watch": "jest --watch --runInBand --verbose",
+    "migrate": "npx sequelize-cli db:migrate",
+    "seed": "npx sequelize-cli db:seed --seed 20251022235301-rbac-seed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colcic-uesc/backend-extension-manager.git"
+  },
+  "author": "Thompson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/colcic-uesc/backend-extension-manager/issues"
+  },
+  "homepage": "https://github.com/colcic-uesc/backend-extension-manager#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "jsonwebtoken": "^9.0.2",
+    "mariadb": "^3.4.5",
+    "next": "^15.5.2",
+    "next-swagger-doc": "^0.4.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.3",
+    "swagger-ui-react": "^5.30.0"
+  },
+  "devDependencies": {
+    "fetch-cookie": "^3.1.0",
+    "jest": "^30.2.0",
+    "node-fetch": "^2.7.0",
+    "prettier": "^3.6.2"
+  }
+}

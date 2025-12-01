@@ -1,0 +1,7 @@
+services:
+  database:
+    image: mariadb:lts
+    env_file:
+      - ../.env.development
+    ports:
+      - "3306:3306"
