@@ -279,7 +279,11 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      nome_categoria: { type: Sequelize.STRING(100), allowNull: false },
+      nome_categoria: {
+        type: Sequelize.ENUM("Programa", "Projeto", "Curso", "Evento"),
+        allowNull: false,
+      },
+
       descricao: Sequelize.TEXT,
       createdAt: tsCreate,
       updatedAt: tsUpdate,

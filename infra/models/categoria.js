@@ -10,7 +10,7 @@ const Categoria = sequelize.define(
       autoIncrement: true,
     },
     nome_categoria: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.ENUM("Programa", "Projeto", "Curso", "Evento"),
       allowNull: false,
     },
     descricao: {

@@ -49,7 +49,7 @@ describe("Integração - Categorias de Extensão (versão detalhada)", () => {
     }
   });
 
-  it("deve permitir que o admin crie uma nova categoria", async () => {
+  it("deve impedir que o admin crie uma categoria fora das opções oficiais", async () => {
     await fetchSession(`${BASE_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -62,15 +62,31 @@ describe("Integração - Categorias de Extensão (versão detalhada)", () => {
       body: JSON.stringify({ nome_categoria: "Educação Ambiental" }),
     });
 
-    expect(res.status).toBe(201);
-    const data = await res.json();
+    expect(res.status).toBe(500);
 
+    const data = await res.json();
+    expect(data.erro || data.mensagem).toBeDefined();
+  });
+
+  it("deve permitir que o admin crie uma categoria válida (Programa, Projeto, Curso ou Evento)", async () => {
+    await fetchSession(`${BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: "admin@uesc.br", senha: "123456" }),
+    });
+
+    const res = await fetchSession(`${BASE_URL}/categorias`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome_categoria: "Projeto" }),
+    });
+
+    expect(res.status).toBe(201);
+
+    const data = await res.json();
     expect(data).toHaveProperty("mensagem");
     expect(data).toHaveProperty("categoria");
-    expect(data.categoria).toHaveProperty(
-      "nome_categoria",
-      "Educação Ambiental",
-    );
+    expect(data.categoria).toHaveProperty("nome_categoria", "Projeto");
   });
 
   it("deve impedir que um aluno crie uma categoria", async () => {
@@ -83,7 +99,7 @@ describe("Integração - Categorias de Extensão (versão detalhada)", () => {
     const res = await fetchSession(`${BASE_URL}/categorias`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome_categoria: "Restrita ao Admin" }),
+      body: JSON.stringify({ nome_categoria: "Evento" }),
     });
 
     expect(res.status).toBe(403);
@@ -99,7 +115,7 @@ describe("Integração - Categorias de Extensão (versão detalhada)", () => {
     const res = await fetchSession(`${BASE_URL}/categorias`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome_categoria: "Educação Ambiental" }),
+      body: JSON.stringify({ nome_categoria: "Projeto" }),
     });
 
     expect(res.status).toBe(409);
@@ -112,7 +128,10 @@ describe("Integração - Categorias de Extensão (versão detalhada)", () => {
       body: JSON.stringify({ email: "admin@uesc.br", senha: "123456" }),
     });
 
-    const res = await fetchSession(`${BASE_URL}/categorias`, { method: "GET" });
+    const res = await fetchSession(`${BASE_URL}/categorias`, {
+      method: "GET",
+    });
+
     expect(res.status).toBe(200);
 
     const data = await res.json();
